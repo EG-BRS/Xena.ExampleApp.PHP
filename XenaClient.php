@@ -35,9 +35,9 @@
  * to clarify the use of OAuth2 authentication and the Xena API.
  * This code is entirely for demonstration purposes and should not be considered as production ready code!
  *
- * Please note that there is no SSL verifications in this code which enables man-in-the-middle attacks!
+ * Please note that there is no SSL verification in this code, neither any use of nonces!
  *
- * Modified by Thomas Joergensen <thomas@xena.biz> on 05. november 2014
+ * Modified by Thomas Eg <thomas@xena.biz> on 25. July 2017
  *
  */
  
@@ -45,10 +45,10 @@ class XenaOAuth2Client
 {
     /**
      * URL's
-	 * Can be found via https://login.xena.biz/.well-known/openid-configuration
+     * Can be found via https://login.xena.biz/.well-known/openid-configuration
      */
-	const AUTHORIZATION_ENDPOINT = 'https://login.xena.biz/connect/authorize';
-	const TOKEN_ENDPOINT         = 'https://login.xena.biz/connect/token';
+    const AUTHORIZATION_ENDPOINT = 'https://login.xena.biz/connect/authorize';
+    const TOKEN_ENDPOINT         = 'https://login.xena.biz/connect/token';
 
     /**
      * HTTP Methods
@@ -148,10 +148,10 @@ class XenaOAuth2Client
             'response_type' => 'code id_token',
             'client_id'     => $this->client_id,
             'redirect_uri'  => $redirect_uri,
-			'nonce' => 'stuff',  				//NOT FOR PRODUCTION! Needed for protection against replay attacks, but it requires persistant storage
-												//                    and are therefor not implemented in this demo
-			'response_mode' => 'form_post',
-			'scope' => 'testapi openid'   		//Scopes are currently subject to change! "openid" is mandatory!
+            'nonce' => 'stuff',                 //NOT FOR PRODUCTION! Needed for protection against replay attacks, but it requires persistant storage
+                                                //                    and are therefor not implemented in this demo
+            'response_mode' => 'form_post',
+            'scope' => 'testapi openid'         //Scopes are currently subject to change! "openid" is mandatory!
         );
         return self::AUTHORIZATION_ENDPOINT . '?' . http_build_query($parameters, null, '&');
     }
@@ -168,7 +168,7 @@ class XenaOAuth2Client
         $parameters['grant_type'] = 'authorization_code';
         $parameters['client_id'] = $this->client_id;
         $parameters['client_secret'] = $this->client_secret;        
-		$http_headers = array();
+        $http_headers = array();
         return $this->executeRequest(self::TOKEN_ENDPOINT, $parameters, self::HTTP_METHOD_POST, $http_headers, self::HTTP_FORM_CONTENT_TYPE_APPLICATION);
     }
 
@@ -217,11 +217,10 @@ class XenaOAuth2Client
      * @return array
      */
     public function fetch($protected_resource_url, $parameters = array(), $http_method = self::HTTP_METHOD_GET)
-    {		
-		$http_headers = array();
+    {        
+        $http_headers = array();
         $http_headers['Authorization'] = 'Bearer ' . $this->access_token;
         $http_headers['Accept'] = 'application/json';
-		var_dump($http_headers);
         return $this->executeRequest($protected_resource_url, $parameters, $http_method, $http_headers);
     }
 
