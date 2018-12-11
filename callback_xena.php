@@ -2,6 +2,9 @@
     /* Include setup */
     include('common.php'); /* !REMEMBER TO EDIT THIS FILE ACCORDING TO YOUR SETUP! */
 
+    /* Initialize xenaclient */
+    $xenaclient = new XenaOAuth2Client(CLIENT_ID, CLIENT_SECRET);
+	
     /* Returning from authentication and authorization? */
     if (!isset($_POST['code']) && !isset($_POST['error']))
     {
