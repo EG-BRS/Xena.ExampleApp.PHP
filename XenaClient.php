@@ -45,10 +45,10 @@ class XenaOAuth2Client
 {
     /**
      * URL's
-     * Can be found via https://login.xena.biz/.well-known/openid-configuration
+     * Can be found via https://logintest.xena.biz/.well-known/openid-configuration
      */
-    const AUTHORIZATION_ENDPOINT = 'https://login.xena.biz/connect/authorize';
-    const TOKEN_ENDPOINT         = 'https://login.xena.biz/connect/token';
+    const AUTHORIZATION_ENDPOINT = 'https://logintest.xena.biz/connect/authorize';
+    const TOKEN_ENDPOINT         = 'https://logintest.xena.biz/connect/token';
 
     /**
      * HTTP Methods
