@@ -44,13 +44,6 @@
 class XenaOAuth2Client
 {
     /**
-     * URL's
-     * Can be found via https://login.xena.biz/.well-known/openid-configuration
-     */
-    const AUTHORIZATION_ENDPOINT = 'https://login.xena.biz/connect/authorize';
-    const TOKEN_ENDPOINT         = 'https://login.xena.biz/connect/token';
-
-    /**
      * HTTP Methods
      */
     const HTTP_METHOD_GET    = 'GET';
@@ -151,9 +144,9 @@ class XenaOAuth2Client
             'nonce' => 'stuff',                 //NOT FOR PRODUCTION! Needed for protection against replay attacks, but it requires persistant storage
                                                 //                    and are therefor not implemented in this demo
             'response_mode' => 'form_post',
-            'scope' => 'testapi openid'         //Scopes are currently subject to change! "openid" is mandatory!
+            'scope' => 'testapi openid email profile'         //Scopes are currently subject to change! "openid" is mandatory!
         );
-        return self::AUTHORIZATION_ENDPOINT . '?' . http_build_query($parameters, null, '&');
+        return AUTHORIZATION_ENDPOINT . '?' . http_build_query($parameters, null, '&');
     }
 
     /**
@@ -169,7 +162,7 @@ class XenaOAuth2Client
         $parameters['client_id'] = $this->client_id;
         $parameters['client_secret'] = $this->client_secret;        
         $http_headers = array();
-        return $this->executeRequest(self::TOKEN_ENDPOINT, $parameters, self::HTTP_METHOD_POST, $http_headers, self::HTTP_FORM_CONTENT_TYPE_APPLICATION);
+        return $this->executeRequest(TOKEN_ENDPOINT, $parameters, self::HTTP_METHOD_POST, $http_headers, self::HTTP_FORM_CONTENT_TYPE_APPLICATION);
     }
 
     /**

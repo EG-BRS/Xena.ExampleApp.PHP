@@ -1,6 +1,7 @@
 <?php
+	require('XenaClient.php');
     /* Include setup */
-    include('common.php'); /* !REMEMBER TO EDIT THIS FILE ACCORDING TO YOUR SETUP! */
+    require('common.php'); /* !REMEMBER TO EDIT THIS FILE ACCORDING TO YOUR SETUP! */
 
     /* Initialize xenaclient */
     $xenaclient = new XenaOAuth2Client(CLIENT_ID, CLIENT_SECRET);
@@ -10,6 +11,7 @@
         /* Returning from authentication and authorization? */
         if (!isset($_GET['code']) && !isset($_GET['error']))
         {
+			
             /* ...no, then authenticate */
             $auth_url = $xenaclient->getAuthenticationUrl(REDIRECT_URI);
             header('Location: ' . $auth_url);
@@ -20,8 +22,9 @@
         {
             /* ...yes, then authorize and get a access token */
             $accessTokenParameters = array('code' => $_GET['code'], 'redirect_uri' => REDIRECT_URI);
+			
             $tokenResponse = $xenaclient->getAccessToken($accessTokenParameters);
-
+			
             if($tokenResponse['result']){
                 $tokenResult = $tokenResponse['result'];
                 $token = $tokenResult['access_token'];
@@ -50,11 +53,28 @@
         <script src="https://my.xena.biz/scripts/xena.plugin.js"></script>
     </head>
     <body>
+		<strong>Your access_token payload:</strong>
+		</br>
+		<?php 
+		$jwt_access_token = $_COOKIE["XenaPHPDemo_XenaToken"];
+
+		$separator = '.';
+
+		if (2 !== substr_count($jwt_access_token, $separator)) {
+			throw new Exception("Incorrect access token format");
+		}
+
+		list($header, $payload, $signature) = explode($separator, $jwt_access_token);
+		
+		// output the JWT Access Token payload
+		var_dump(base64_decode($payload));
+		?>
+		</br>
+		</br>
         Your fiscalsetups:
         <ul>
         <?php
-            $fiscalsetuplist = $xenaclient->fetch('https://my.xena.biz/Api/User/FiscalSetup','PageSize=100');
-            
+            $fiscalsetuplist = $xenaclient->fetch('https://test.xena.biz/Api/User/FiscalSetup','PageSize=100');
              foreach($fiscalsetuplist['result']['Entities'] as $fiscalsetup){
                  $name = $fiscalsetup['Address']['Name'];
                  echo "<li>$name</li>";

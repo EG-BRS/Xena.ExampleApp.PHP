@@ -1,6 +1,7 @@
 <?php
+	require('XenaClient.php');
     /* Include setup */
-    include('common.php'); /* !REMEMBER TO EDIT THIS FILE ACCORDING TO YOUR SETUP! */
+    require('common.php'); /* !REMEMBER TO EDIT THIS FILE ACCORDING TO YOUR SETUP! */
 
     /* Initialize xenaclient */
     $xenaclient = new XenaOAuth2Client(CLIENT_ID, CLIENT_SECRET);
