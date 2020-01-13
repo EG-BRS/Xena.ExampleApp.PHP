@@ -144,7 +144,7 @@ class XenaOAuth2Client
             'nonce' => 'stuff',                 //NOT FOR PRODUCTION! Needed for protection against replay attacks, but it requires persistant storage
                                                 //                    and are therefor not implemented in this demo
             'response_mode' => 'form_post',
-            'scope' => 'testapi openid email profile'         //Scopes are currently subject to change! "openid" is mandatory!
+            'scope' => 'testapi openid profile'         //Scopes are currently subject to change! "openid" is mandatory!
         );
         return AUTHORIZATION_ENDPOINT . '?' . http_build_query($parameters, null, '&');
     }
@@ -163,6 +163,14 @@ class XenaOAuth2Client
         $parameters['client_secret'] = $this->client_secret;        
         $http_headers = array();
         return $this->executeRequest(TOKEN_ENDPOINT, $parameters, self::HTTP_METHOD_POST, $http_headers, self::HTTP_FORM_CONTENT_TYPE_APPLICATION);
+    }
+	
+	public function getUserInfo($token)
+    {   
+		$http_headers = array();
+        $http_headers['Authorization'] = 'Bearer ' . $token;
+        $http_headers['Accept'] = 'application/json';
+        return $this->executeRequest(USERINFO_ENDPOINT, null, self::HTTP_METHOD_GET, $http_headers);
     }
 
     /**

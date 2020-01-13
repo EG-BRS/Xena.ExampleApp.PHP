@@ -70,6 +70,32 @@
 		var_dump(base64_decode($payload));
 		?>
 		</br>
+		<strong>Your id_token payload:</strong>
+		</br>
+		<?php 
+		$jwt_id_token = $_COOKIE["IdTokenCookie"];
+
+		$separator = '.';
+
+		if (2 !== substr_count($jwt_id_token, $separator)) {
+			throw new Exception("Incorrect id token format");
+		}
+
+		list($header, $payload, $signature) = explode($separator, $jwt_id_token);
+		
+		// output the JWT Access Token payload
+		var_dump(base64_decode($payload));
+		?>
+		</br>
+		<strong>Your user info :</strong>
+		</br>
+		<?php 
+		$userInfoCookieData = $_COOKIE["UserInfoEndpointCookie"];
+
+		// output the data
+		var_dump($userInfoCookieData);
+		?>
+		</br>
 		</br>
         Your fiscalsetups:
         <ul>

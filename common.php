@@ -17,4 +17,5 @@
     */
     const AUTHORIZATION_ENDPOINT = 'https://logintest.xena.biz/connect/authorize';
     const TOKEN_ENDPOINT         = 'https://logintest.xena.biz/connect/token';
+    const USERINFO_ENDPOINT         = 'https://logintest.xena.biz/connect/userinfo';
 ?>

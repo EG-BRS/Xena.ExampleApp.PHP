@@ -22,10 +22,19 @@
         if($tokenResponse['result']){
             $tokenResult = $tokenResponse['result'];
             $token = $tokenResult['access_token'];
+            $id_token = $tokenResult['id_token'];
 
-            /* You would properly persist the token to session/storage at this point and re-use it the at next page-refresh during client initialization... */
+            /* You would properly persist the encoded token to session/storage at this point and re-use it the at next page-refresh during client initialization... */
             $xenaclient->setAccessToken($token);
             setcookie('XenaPHPDemo_XenaToken',$token);
+			setcookie("IdTokenCookie",$id_token);
+			
+			$userInfoEndpoint = $xenaclient->getUserInfo($token);
+			$firstArrayElement = array_values($userInfoEndpoint)[0];
+			// Join Params
+			array_walk($firstArrayElement, create_function('&$i,$k','$i=" $k=\"$i\"";'));
+			$userInfo = implode($firstArrayElement,"");
+			setcookie("UserInfoEndpointCookie", $userInfo);
 
             /* Go back! */
             header('Location: index.php');
