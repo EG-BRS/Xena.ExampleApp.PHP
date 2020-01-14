@@ -97,17 +97,32 @@
 		?>
 		</br>
 		</br>
-        Your fiscalsetups:
+        <p>Fiscal setups for logged user: 
+		<?php 
+			$cookieArray = explode(" ", $_COOKIE["UserInfoEndpointCookie"]);
+			foreach($cookieArray as $cookieValue){
+				if (strpos($cookieValue, 'preferred_username') !== false) {
+					echo "<strong>" . explode("=", $cookieValue)[1] . "</strong>";
+				}	
+			}
+		?>
+		</p>
         <ul>
         <?php
             $fiscalsetuplist = $xenaclient->fetch('https://test.xena.biz/Api/User/FiscalSetup','PageSize=100');
+			 echo "Number of fiscals: <strong>{$fiscalsetuplist['result']['Count']}</strong>";
              foreach($fiscalsetuplist['result']['Entities'] as $fiscalsetup){
                  $name = $fiscalsetup['Address']['Name'];
-                 echo "<li>$name</li>";
+                 $id = $fiscalsetup['Id'];
+                 echo "<li>Id: $id Fiscal name: $name</li>";
+				 echo "Full response: ";
+				 echo "<code>";
+				 echo print_r($fiscalsetup);
+				 echo "</code>";
              }
         ?>
         </ul>
+		<br>
+		<p>Learn more about <strong><a href="https://xena.biz/api-doc/general/#/">Xena API</a></strong> at <strong><a href="https://dev.xena.biz">https://dev.xena.biz</a></strong></p>
     </body>
 </html>
-
-
