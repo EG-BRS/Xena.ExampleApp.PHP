@@ -77,6 +77,8 @@ class XenaOAuth2Client
      * @var string
      */
     protected $access_token = null;
+	
+    protected $refresh_token = null;
 
     /**
      * Access Token Secret
@@ -138,13 +140,13 @@ class XenaOAuth2Client
     public function getAuthenticationUrl($redirect_uri)
     {
         $parameters = array(
-            'response_type' => 'code id_token',
+            'response_type' => 'code id_token', 
             'client_id'     => $this->client_id,
             'redirect_uri'  => $redirect_uri,
             'nonce' => 'stuff',                 //NOT FOR PRODUCTION! Needed for protection against replay attacks, but it requires persistant storage
                                                 //                    and are therefor not implemented in this demo
             'response_mode' => 'form_post',
-            'scope' => 'testapi openid profile'         //Scopes are currently subject to change! "openid" is mandatory!
+            'scope' => 'testapi openid profile offline_access'         //Scopes are currently subject to change! "openid" is mandatory! // offline_access scope gives you the refresh_token
         );
         return AUTHORIZATION_ENDPOINT . '?' . http_build_query($parameters, null, '&');
     }
@@ -165,6 +167,17 @@ class XenaOAuth2Client
         return $this->executeRequest(TOKEN_ENDPOINT, $parameters, self::HTTP_METHOD_POST, $http_headers, self::HTTP_FORM_CONTENT_TYPE_APPLICATION);
     }
 	
+	public function refreshToken()
+    {   
+		$parameters = array();
+        $parameters['grant_type'] = 'refresh_token';
+        $parameters['client_id'] = $this->client_id;
+        $parameters['client_secret'] = $this->client_secret;        
+        $parameters['refresh_token'] = $this->refresh_token;
+        $http_headers = array();
+        return $this->executeRequest(TOKEN_ENDPOINT, $parameters, self::HTTP_METHOD_POST, $http_headers, self::HTTP_FORM_CONTENT_TYPE_APPLICATION);
+    }
+		
 	public function getUserInfo($token)
     {   
 		$http_headers = array();
@@ -182,6 +195,11 @@ class XenaOAuth2Client
     public function setAccessToken($token)
     {
         $this->access_token = $token;
+    }  
+
+	public function setRefreshToken($token)
+    {
+        $this->refresh_token = $token;
     }
 
     /**
