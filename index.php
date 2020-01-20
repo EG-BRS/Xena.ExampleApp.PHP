@@ -60,8 +60,11 @@
 			setcookie(COOKIE_XENA_IDTOKEN, $refreshTokenResponse["result"]["id_token"]);
 			setcookie(COOKIE_XENA_ACCESS_TOKEN, $refreshTokenResponse["result"]["access_token"]);
 		}
-	// die(var_dump($_COOKIE[COOKIE_XENA_ACCESS_TOKEN]));
         $xenaclient->setAccessToken($_COOKIE[COOKIE_XENA_ACCESS_TOKEN]);
+		
+		// POST example
+		// $parameters = array("LedgerId"=>YOUR_LEDGERID, "FiscalDateDays"=>FISCAL_DATE_DAYS, "VoucherNumber"=> null);
+		// $response = $xenaclient->fetch("https://test.xena.biz/Api/Fiscal/YOUR_FISCAL_ID/LedgerLine" , $parameters, "POST");
     }
 ?>
 <html>

@@ -264,6 +264,7 @@ class XenaOAuth2Client
         switch($http_method) {
             case self::HTTP_METHOD_POST:
                 $curl_options[CURLOPT_POST] = true;
+				$parameters = http_build_query($parameters, null, '&');
                 /* No break */
             case self::HTTP_METHOD_PUT:
                 if(is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
